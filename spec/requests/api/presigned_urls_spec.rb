@@ -14,22 +14,22 @@ RSpec.describe "Api::PresignedUrls", type: :request do
         content_type: "image/jpeg"
       }
     end
-    
+
     before do
       # Mock AWS credentials
       allow(Rails.application.credentials).to receive(:dig).with(:aws, :region).and_return("us-east-1")
       allow(Rails.application.credentials).to receive(:dig).with(:aws, :access_key_id).and_return("test_key")
       allow(Rails.application.credentials).to receive(:dig).with(:aws, :secret_access_key).and_return("test_secret")
       allow(Rails.application.credentials).to receive(:dig).with(:aws, :s3_bucket).and_return("test-bucket")
-      
+
       # Mock S3 client and presigner
       s3_client = instance_double(Aws::S3::Client)
       presigner = instance_double(Aws::S3::Presigner)
-      
+
       allow(Aws::S3::Client).to receive(:new).and_return(s3_client)
       allow(Aws::S3::Presigner).to receive(:new).and_return(presigner)
       allow(presigner).to receive(:presigned_url).and_return("https://example.com/presigned-put-url")
-      
+
       # Mock SecureRandom.uuid
       allow(SecureRandom).to receive(:uuid).and_return("test-uuid")
     end
@@ -37,7 +37,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
     context "with valid parameters" do
       it "returns a presigned URL with key and expiration" do
         post "/api/presigned_urls", params: valid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:ok)
         expect(json_response).to have_key("url")
         expect(json_response).to have_key("key")
@@ -51,7 +51,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
       it "returns forbidden status" do
         invalid_params = valid_params.merge(app_name: "invalid_app")
         post "/api/presigned_urls", params: invalid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:forbidden)
         expect(json_response["error"]).to eq("Access denied")
       end
@@ -61,7 +61,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
       it "returns forbidden status" do
         invalid_params = valid_params.except(:app_name)
         post "/api/presigned_urls", params: invalid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:forbidden)
         expect(json_response["error"]).to eq("Access denied")
       end
@@ -71,7 +71,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
       it "returns bad request status" do
         invalid_params = valid_params.except(:file_name)
         post "/api/presigned_urls", params: invalid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:bad_request)
         expect(json_response["error"]).to eq("file_name and content_type are required")
       end
@@ -81,7 +81,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
       it "returns bad request status" do
         invalid_params = valid_params.except(:content_type)
         post "/api/presigned_urls", params: invalid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:bad_request)
         expect(json_response["error"]).to eq("file_name and content_type are required")
       end
@@ -90,7 +90,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
     context "without authentication" do
       it "returns unauthorized status" do
         post "/api/presigned_urls", params: valid_params.to_json, headers: json_headers
-        
+
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe "Api::PresignedUrls", type: :request do
 
       it "returns internal server error status" do
         post "/api/presigned_urls", params: valid_params.to_json, headers: headers
-        
+
         expect(response).to have_http_status(:internal_server_error)
         expect(json_response["error"]).to eq("Internal server error")
       end

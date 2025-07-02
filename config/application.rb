@@ -29,7 +29,7 @@ module RailsApiTemplate
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
-    
+
     # Ensure lib is in autoload paths for custom classes
     config.autoload_paths << Rails.root.join("lib")
 

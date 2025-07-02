@@ -8,7 +8,7 @@
 # Never run this in production or use these credentials in production
 
 # Create a default OAuth application for development
-if Rails.env.development? || Rails.env.test?
+if Rails.env.local?
   # Create default account
   account = Account.find_or_create_by!(name: 'Default Account')
 

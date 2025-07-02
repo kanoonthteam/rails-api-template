@@ -20,11 +20,11 @@ Rails.application.routes.draw do
     end
 
     resources :accounts, only: [ :index ]
-    
+
     resources :images, only: [ :show ], param: :key, constraints: { key: /.*/ }
     resources :presigned_urls, only: [ :create ]
   end
 
   # Health check
-  get "up" => "rails/health#show", as: :rails_health_check
+  get "up" => "rails/health#show", :as => :rails_health_check
 end
