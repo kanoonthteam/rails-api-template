@@ -1,0 +1,140 @@
+meta {
+  name: Getting Started
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/up
+  body: none
+  auth: none
+}
+
+docs {
+  # Rails API Template - Getting Started
+  
+  This Bruno collection provides API requests for the Rails API Template, which uses OAuth 2.0 for authentication via Doorkeeper.
+  
+  ## Prerequisites
+  
+  1. Rails server running locally on port 3000 (or update the `base_url` in environment variables)
+  2. Database setup with `rails db:setup`
+  3. OAuth application created in the database (see setup below)
+  
+  ## Initial Setup
+  
+  ### 1. Create an OAuth Application
+  
+  First, you need to create an OAuth application. Run this in your Rails console:
+  
+  ```ruby
+  # rails console
+  app = Doorkeeper::Application.create!(
+    name: 'API Client',
+    redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+    scopes: '',
+    confidential: true
+  )
+  puts "Client ID: #{app.uid}"
+  puts "Client Secret: #{app.secret}"
+  ```
+  
+  ### 2. Create an Account and User
+  
+  ```ruby
+  # Create an account
+  account = Account.create!(name: 'Test Company')
+  
+  # Create a user
+  user = User.create!(
+    email: 'user@example.com',
+    password: 'password123',
+    name: 'Test User',
+    phone_number: '+1234567890',
+    account: account,
+    role: 'admin'
+  )
+  ```
+  
+  ### 3. Configure Bruno Environment
+  
+  1. In Bruno, select the "Development" environment
+  2. Update the following variables:
+     - `client_id`: The OAuth application UID from step 1
+     - `client_secret`: The OAuth application secret from step 1
+  
+  ## Authentication Flow
+  
+  1. **Get Access Token**: Use the `auth/token` request with user credentials
+  2. **Save Token**: Bruno will automatically use the token for authenticated requests
+  3. **Make API Calls**: Use the token to access protected endpoints
+  
+  ## API Endpoints
+  
+  ### Authentication
+  - `POST /oauth/token` - Get access token
+  - `POST /oauth/revoke` - Revoke token
+  
+  ### Users
+  - `POST /api/users` - Create new user (no auth required)
+  - `GET /api/users/me` - Get current user
+  - `POST /users/password` - Request password reset (no auth required)
+  - `PUT /users/password` - Reset password with token (no auth required)
+  
+  ### Accounts
+  - `GET /api/accounts` - List accounts
+  
+  ## Response Format
+  
+  All API responses follow the JSON:API specification:
+  
+  ```json
+  {
+    "data": {
+      "id": "1",
+      "type": "resource-type",
+      "attributes": {
+        // resource attributes
+      },
+      "relationships": {
+        // related resources
+      }
+    }
+  }
+  ```
+  
+  ## Error Handling
+  
+  Errors are returned in JSON:API format:
+  
+  ```json
+  {
+    "errors": [
+      {
+        "source": { "pointer": "/data/attributes/field" },
+        "detail": "Error message"
+      }
+    ]
+  }
+  ```
+  
+  ## Common HTTP Status Codes
+  
+  - `200 OK`: Successful request
+  - `201 Created`: Resource created successfully
+  - `401 Unauthorized`: Invalid or missing authentication
+  - `422 Unprocessable Entity`: Validation errors
+  
+  ## Testing the API
+  
+  1. Start with the health check (this request) to ensure the server is running
+  2. Get an access token using `auth/token`
+  3. Test authenticated endpoints using the token
+  
+  ## Tips
+  
+  - Access tokens expire after 24 hours by default
+  - Use refresh tokens to get new access tokens without re-authentication
+  - Phone numbers are automatically normalized using the phony gem
+  - User roles: employee (default), admin, owner
+}

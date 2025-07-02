@@ -1,0 +1,53 @@
+meta {
+  name: Rails API Template
+}
+
+script:post-response {
+  // Automatically save access token and refresh token from OAuth responses
+  if (res.body && res.body.access_token) {
+    bru.setEnvVar("access_token", res.body.access_token);
+    
+    if (res.body.refresh_token) {
+      bru.setEnvVar("refresh_token", res.body.refresh_token);
+    }
+    
+    console.log("✅ Tokens saved to environment variables");
+  }
+}
+
+docs {
+  # Rails API Template Collection
+  
+  This collection contains all API endpoints for the Rails API Template project.
+  
+  ## Features
+  
+  - OAuth 2.0 authentication using Doorkeeper
+  - JSON:API formatted responses
+  - User management with roles (employee, admin, owner)
+  - Multi-tenant account structure
+  - Automatic token management
+  
+  ## Quick Start
+  
+  1. See `docs/getting-started` for setup instructions
+  2. Configure your environment variables
+  3. Get an access token using `auth/token`
+  4. Start making API requests!
+  
+  ## Collection Features
+  
+  - **Automatic Token Handling**: Access tokens are automatically saved when you authenticate
+  - **Environment Variables**: Switch between development and production environments
+  - **Comprehensive Documentation**: Each endpoint includes detailed documentation
+  
+  ## Project Structure
+  
+  ```
+  bruno/
+  ├── auth/           # Authentication endpoints
+  ├── users/          # User management
+  ├── accounts/       # Account management
+  └── docs/           # Documentation and guides
+  ```
+}

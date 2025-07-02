@@ -1,0 +1,50 @@
+meta {
+  name: Get Presigned URL for Image
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/images/uploads/test/image.jpg?app_name=web
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+query {
+  app_name: web
+}
+
+docs {
+  ## Get Presigned URL for Image
+
+  This endpoint generates a presigned URL for retrieving an image from S3.
+
+  ### Parameters
+
+  - **key** (path parameter): The S3 object key for the image
+  - **app_name** (query parameter): The client application name (must be one of: ios, android, web)
+
+  ### Response
+
+  ```json
+  {
+    "url": "https://s3.amazonaws.com/bucket/uploads/test/image.jpg?..."
+  }
+  ```
+
+  The returned URL is valid for 1 hour and can be used to directly download the image from S3.
+
+  ### Error Responses
+
+  - **403 Forbidden**: Invalid or missing app_name
+  - **404 Not Found**: Object does not exist in S3
+  - **500 Internal Server Error**: AWS service error
+}

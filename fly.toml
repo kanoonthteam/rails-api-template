@@ -1,0 +1,50 @@
+# fly.toml app configuration file generated for rails-api-template
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "rails-api-template"
+primary_region = "ord"
+console_command = "/rails/bin/rails console"
+
+[build]
+
+[deploy]
+  release_command = "./bin/rails db:prepare"
+
+[env]
+  PORT = "8080"
+  SERVER_COMMAND = "bin/thrust"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[checks]
+  [checks.status]
+    port = 8080
+    type = "http"
+    interval = 10000
+    timeout = 2000
+    grace_period = "5s"
+    method = "GET"
+    path = "/up"
+    protocol = "http"
+    tls_skip_verify = false
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[[statics]]
+  guest_path = "/rails/public"
+  url_prefix = "/"
+
+[processes]
+  app = ""
+  worker = "bundle exec rake solid_queue:start"

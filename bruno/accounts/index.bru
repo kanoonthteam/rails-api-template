@@ -1,0 +1,65 @@
+meta {
+  name: List Accounts
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/accounts
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+docs {
+  ## List Accounts
+  
+  Retrieve a list of accounts accessible to the currently authenticated user.
+  
+  ### Authorization
+  
+  Requires a valid access token in the Authorization header:
+  ```
+  Authorization: Bearer <access_token>
+  ```
+  
+  ### Response
+  
+  ```json
+  {
+    "data": [
+      {
+        "id": "1",
+        "type": "accounts",
+        "attributes": {
+          "id": 1,
+          "name": "Acme Corporation",
+          "created_at": "2024-01-01T00:00:00.000Z",
+          "updated_at": "2024-01-01T00:00:00.000Z"
+        },
+        "relationships": {
+          "users": {
+            "data": [
+              {
+                "type": "users",
+                "id": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  ```
+  
+  ### Error Responses
+  
+  - `401 Unauthorized`: Invalid or missing access token
+}

@@ -1,0 +1,54 @@
+meta {
+  name: Refresh Token
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/oauth/token
+  body: formUrlencoded
+  auth: none
+}
+
+body:form-urlencoded {
+  grant_type: refresh_token
+  refresh_token: {{refresh_token}}
+  client_id: {{client_id}}
+  client_secret: {{client_secret}}
+}
+
+docs {
+  ## Refresh Token
+  
+  This endpoint exchanges a refresh token for a new access token.
+  
+  ### Request Body
+  
+  - `grant_type` (required): Must be "refresh_token"
+  - `refresh_token` (required): The refresh token obtained from a previous token request
+  - `client_id` (required): OAuth application client ID
+  - `client_secret` (required): OAuth application client secret
+  
+  ### Response
+  
+  ```json
+  {
+    "access_token": "new_access_token_here",
+    "token_type": "Bearer",
+    "expires_in": 86400,
+    "refresh_token": "new_refresh_token_here",
+    "created_at": 1234567890
+  }
+  ```
+  
+  ### Error Responses
+  
+  - `400 Bad Request`: Invalid grant type or missing parameters
+  - `401 Unauthorized`: Invalid refresh token or client credentials
+  
+  ### Notes
+  
+  - Refresh tokens can be used to obtain new access tokens without requiring the user to re-authenticate
+  - The refresh token may also be rotated (you'll receive a new refresh token in the response)
+  - Store refresh tokens securely as they provide long-term access
+}

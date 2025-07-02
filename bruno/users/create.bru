@@ -1,0 +1,81 @@
+meta {
+  name: Create User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/api/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "newuser@example.com",
+    "password": "securepassword123",
+    "name": "John Doe",
+    "phone_number": "+1234567890",
+    "account_id": 1
+  }
+}
+
+docs {
+  ## Create User
+  
+  Create a new user account. This endpoint does not require authentication.
+  
+  ### Request Body
+  
+  - `email` (required): Valid email address
+  - `password` (required): User's password
+  - `name` (required): User's full name
+  - `phone_number` (required): User's phone number (will be normalized)
+  - `account_id` (required): ID of the account this user belongs to
+  
+  ### Response
+  
+  ```json
+  {
+    "data": {
+      "id": "1",
+      "type": "users",
+      "attributes": {
+        "id": 1,
+        "email": "newuser@example.com",
+        "name": "John Doe",
+        "phone_number": "+1234567890",
+        "role": "employee",
+        "created_at": "2024-01-01T00:00:00.000Z",
+        "updated_at": "2024-01-01T00:00:00.000Z"
+      },
+      "relationships": {
+        "account": {
+          "data": {
+            "type": "accounts",
+            "id": "1"
+          }
+        }
+      }
+    }
+  }
+  ```
+  
+  ### Error Responses
+  
+  - `422 Unprocessable Entity`: Validation errors
+    ```json
+    {
+      "errors": [
+        {
+          "source": { "pointer": "/data/attributes/email" },
+          "detail": "has already been taken"
+        }
+      ]
+    }
+    ```
+}

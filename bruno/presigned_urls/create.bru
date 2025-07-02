@@ -1,0 +1,79 @@
+meta {
+  name: Create Presigned Upload URL
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/presigned_urls
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "app_name": "web",
+    "file_name": "profile-photo.jpg",
+    "content_type": "image/jpeg"
+  }
+}
+
+docs {
+  ## Create Presigned Upload URL
+
+  This endpoint generates a presigned URL for uploading a file to S3.
+
+  ### Request Body
+
+  ```json
+  {
+    "app_name": "web",
+    "file_name": "profile-photo.jpg",
+    "content_type": "image/jpeg"
+  }
+  ```
+
+  - **app_name** (required): The client application name (must be one of: ios, android, web)
+  - **file_name** (required): The name of the file to upload
+  - **content_type** (required): The MIME type of the file
+
+  ### Response
+
+  ```json
+  {
+    "url": "https://s3.amazonaws.com/bucket/uploads/uuid/profile-photo.jpg?...",
+    "key": "uploads/uuid/profile-photo.jpg",
+    "expires_at": "2024-01-01T12:00:00Z"
+  }
+  ```
+
+  - **url**: The presigned URL to use for uploading the file
+  - **key**: The S3 object key where the file will be stored
+  - **expires_at**: When the presigned URL expires (1 hour from creation)
+
+  ### How to Upload
+
+  After receiving the presigned URL, make a PUT request to the URL with the file content:
+
+  ```bash
+  curl -X PUT \
+    -H "Content-Type: image/jpeg" \
+    --data-binary @profile-photo.jpg \
+    "https://s3.amazonaws.com/bucket/uploads/uuid/profile-photo.jpg?..."
+  ```
+
+  ### Error Responses
+
+  - **400 Bad Request**: Missing required parameters (file_name or content_type)
+  - **403 Forbidden**: Invalid or missing app_name
+  - **500 Internal Server Error**: AWS service error
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Get Access Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/oauth/token
+  body: formUrlencoded
+  auth: none
+}
+
+body:form-urlencoded {
+  grant_type: password
+  username: user@example.com
+  password: password123
+  client_id: {{client_id}}
+  client_secret: {{client_secret}}
+}
+
+docs {
+  ## Get Access Token
+  
+  This endpoint authenticates a user and returns an access token using the Resource Owner Password Credentials flow.
+  
+  ### Request Body
+  
+  - `grant_type` (required): Must be "password"
+  - `username` (required): User's email address
+  - `password` (required): User's password
+  - `client_id` (required): OAuth application client ID
+  - `client_secret` (required): OAuth application client secret
+  
+  ### Response
+  
+  ```json
+  {
+    "access_token": "eyJhbGciOiJIUzI1NiJ9...",
+    "token_type": "Bearer",
+    "expires_in": 86400,
+    "refresh_token": "refresh_token_here",
+    "created_at": 1234567890
+  }
+  ```
+  
+  ### Error Responses
+  
+  - `400 Bad Request`: Invalid grant type or missing parameters
+  - `401 Unauthorized`: Invalid credentials
+}

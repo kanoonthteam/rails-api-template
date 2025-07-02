@@ -1,0 +1,67 @@
+{
+  "version": "1",
+  "name": "Rails API Template",
+  "type": "collection",
+  "environments": [
+    {
+      "name": "Development",
+      "variables": [
+        {
+          "name": "base_url",
+          "value": "http://localhost:3000",
+          "type": "text"
+        },
+        {
+          "name": "client_id",
+          "value": "",
+          "type": "text"
+        },
+        {
+          "name": "client_secret",
+          "value": "",
+          "type": "secret"
+        },
+        {
+          "name": "access_token",
+          "value": "",
+          "type": "secret"
+        },
+        {
+          "name": "refresh_token",
+          "value": "",
+          "type": "secret"
+        }
+      ]
+    },
+    {
+      "name": "Production",
+      "variables": [
+        {
+          "name": "base_url",
+          "value": "https://api.example.com",
+          "type": "text"
+        },
+        {
+          "name": "client_id",
+          "value": "",
+          "type": "text"
+        },
+        {
+          "name": "client_secret",
+          "value": "",
+          "type": "secret"
+        },
+        {
+          "name": "access_token",
+          "value": "",
+          "type": "secret"
+        },
+        {
+          "name": "refresh_token",
+          "value": "",
+          "type": "secret"
+        }
+      ]
+    }
+  ]
+}

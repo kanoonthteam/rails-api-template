@@ -1,0 +1,44 @@
+meta {
+  name: Revoke Token
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/oauth/revoke
+  body: formUrlencoded
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:form-urlencoded {
+  token: {{access_token}}
+  token_type_hint: access_token
+  client_id: {{client_id}}
+  client_secret: {{client_secret}}
+}
+
+docs {
+  ## Revoke Token
+  
+  This endpoint revokes an access token or refresh token.
+  
+  ### Request Body
+  
+  - `token` (required): The token to revoke
+  - `token_type_hint` (optional): Either "access_token" or "refresh_token"
+  - `client_id` (required): OAuth application client ID
+  - `client_secret` (required): OAuth application client secret
+  
+  ### Response
+  
+  - `200 OK`: Token successfully revoked (empty response body)
+  
+  ### Error Responses
+  
+  - `400 Bad Request`: Invalid request
+  - `401 Unauthorized`: Invalid client credentials
+}

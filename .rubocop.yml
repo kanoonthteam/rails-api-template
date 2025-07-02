@@ -1,0 +1,116 @@
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# Rails API-specific configuration
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Exclude:
+    - 'bin/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'storage/**/*'
+    - 'node_modules/**/*'
+    - 'spec/rails_helper.rb'
+    - 'spec/spec_helper.rb'
+    - 'config/environments/*'
+    - 'config/initializers/*'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'config.ru'
+
+# Rails-specific cops
+Rails:
+  Enabled: true
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - 'spec/**/*'
+    - 'db/seeds.rb'
+
+Rails/Output:
+  Exclude:
+    - 'db/seeds.rb'
+
+# Style preferences for API projects
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+# Method length and complexity
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - 'db/migrate/*'
+    - 'spec/**/*'
+
+Metrics/BlockLength:
+  Max: 30
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'config/environments/*'
+    - 'app/dashboards/*'
+
+Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - 'db/migrate/*'
+
+# API-specific: We don't need ApplicationHelper in API mode
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+# Allow compact style for simple classes
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+  Exclude:
+    - 'config/application.rb'
+
+# String literals
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+# Prefer symbols for hash keys
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+
+# Allow both styles for array literals
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+# API controllers often have simple update/create methods
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# Serializers and dashboards can have many attributes
+Metrics/ParameterLists:
+  Max: 5
+  CountKeywordArgs: false
+
+# Allow longer lines for readability
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'config/initializers/*'
+    - 'db/migrate/*'
